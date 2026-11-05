@@ -15,6 +15,16 @@ O site é estático: a pasta `web/` vai inteira para o **Cloudflare Pages**. O `
 
 O arquivo `web/_headers` é aplicado automaticamente (CSP, permissões de USB/serial, `noindex` no admin).
 
+### Alternativa: Worker com arquivos estáticos
+
+O painel novo da Cloudflare abre por padrão o fluxo de **Worker**. Ele também funciona, graças ao `wrangler.jsonc` na raiz, que publica `web/` como arquivos estáticos (o `_headers` continua valendo):
+
+- Comando da build: *(vazio)*
+- Comando de implantação: `npx wrangler deploy`
+- Endereço: `layerbros-hb1.<sua-conta>.workers.dev`
+
+Para proteger só o `/admin` com o Access num Worker, use um **domínio próprio** (Worker → Settings → Domains & Routes → Add → Custom domain) e crie a aplicação do Access nesse domínio. O endereço `workers.dev` deve ser desativado nas mesmas configurações, para o `/admin` não ficar acessível por ele.
+
 ## 2. Proteger o `/admin` com Cloudflare Access
 
 1. Painel Cloudflare → **Zero Trust** (o plano Free atende até 50 usuários).

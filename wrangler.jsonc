@@ -1,0 +1,12 @@
+// Deploy como Cloudflare Worker só com arquivos estáticos (sem código de servidor).
+// Publica a pasta web/ como está. Ver docs/deploy.md.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "layerbros-hb1",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./web",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}
