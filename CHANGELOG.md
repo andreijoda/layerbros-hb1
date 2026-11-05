@@ -4,6 +4,25 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões d
 
 ## [Não lançado]
 
+Nada ainda.
+
+## Site 1.1 — 2026-11-05
+
+### Adicionado
+- Site no ar em https://hb1.layerbros.com e https://layerbros-hb1.pages.dev (Cloudflare Pages).
+- `/admin` e URLs de prévia protegidos pelo Cloudflare Access (login com código por e-mail).
+- Produção: atalhos para **Início** e **Recalibrar** no cabeçalho.
+- Início: animação de um cabo USB-C conectando no freio quando não há freio conectado.
+- `wrangler.jsonc` para deploy alternativo como Worker de arquivos estáticos.
+- `tools/screenshots.mjs` e prints das telas em `docs/img/`.
+
+### Alterado
+- Início conectado: dados da placa em duas colunas, com o ID da placa numa linha inteira (antes quebrava em duas linhas e sobrava um card sozinho).
+- CSP aceita estilos inline nos atributos `style` (necessário para o layout atual).
+
+### Removido
+- Faixa de avisos animada no topo do Início.
+
 ## Firmware 1.0.0 · Site 1.0 — 2026-11-05
 
 Primeira versão.

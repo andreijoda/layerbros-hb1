@@ -27,13 +27,24 @@ web/
   assets/js/ui.js         utilidades de interface e mensagens de erro
   assets/css/lb.css       tokens e componentes LayerBros
   firmware/               .uf2 publicado + manifest.json (gerados pelo script)
+  _headers                CSP e cabeçalhos do Cloudflare
 tools/
   release-firmware.sh compila e publica o firmware em web/firmware/
-  fake-hb1.js         HB-1 simulado (Web Serial falso) para testes
+  fake-hb1.js         HB-1 simulado (Web Serial falso) para testes e prints
   e2e.mjs             teste de ponta a ponta com Playwright
+  screenshots.mjs     regera as imagens de docs/img/
   tests/              testes node:test
 docs/                 documentação (índice em docs/README.md)
+  img/                prints das telas (gerados por tools/screenshots.mjs)
+wrangler.jsonc        alternativa de deploy como Worker (o Pages ignora)
+.github/workflows/    CI: build do firmware + checagens do site
 ```
+
+## Onde está no ar
+
+- Site: https://hb1.layerbros.com e https://layerbros-hb1.pages.dev (Cloudflare Pages, deploy automático a cada push na `main`).
+- `/admin` e as URLs de prévia exigem login do Cloudflare Access (política "HB-1 Operadores").
+- Detalhes, conferência com `curl` e como liberar operadores: `docs/deploy.md`.
 
 ## Comandos
 
@@ -43,9 +54,13 @@ docs/                 documentação (índice em docs/README.md)
 | Checar sintaxe JS | `npm run check` |
 | Testes unitários | `npm test` |
 | Teste de ponta a ponta | `node tools/e2e.mjs` (Playwright + Chromium) |
+| Regerar prints da documentação | `node tools/screenshots.mjs` (Playwright + Chromium) |
 | Compilar e publicar firmware | `PICO_SDK_PATH=... tools/release-firmware.sh` |
 
-Rode `npm run check`, `npm test` e `node tools/e2e.mjs` antes de terminar qualquer mudança no site. Rode o build do firmware antes de terminar qualquer mudança em `firmware/`.
+- Antes de terminar qualquer mudança no site: rode `npm run check`, `npm test` e `node tools/e2e.mjs`.
+- Se mudou o visual de uma tela: rode também `node tools/screenshots.mjs` e faça commit de `docs/img/`.
+- Antes de terminar qualquer mudança em `firmware/`: rode o build do firmware.
+- Mudou comportamento, tela ou configuração? Atualize o `.md` correspondente e o `CHANGELOG.md` na mesma mudança.
 
 ## Invariantes (quebrar qualquer um destes quebra o produto)
 
@@ -67,6 +82,8 @@ Rode `npm run check`, `npm test` e `node tools/e2e.mjs` antes de terminar qualqu
 - Movimento curto (150–500 ms) e sempre desligado em `prefers-reduced-motion`. Os efeitos vindos do pacote Transitions.dev (shake, success-check, shimmer, number-pop-in) estão em `lb.css`. Use com moderação, só onde ajuda a entender o estado.
 - Acessibilidade: texto 4,5:1, foco visível, toque ≥ 44 px, `role="alert"` em erros, `aria-live` nos painéis que mudam.
 - Logos em `web/assets/img/` vêm do design system LayerBros: não redesenhar nem trocar a fonte do nome.
+- Navegação: as telas do cliente (`/`, `/recalibrar/`) **nunca** linkam para o `/admin`. O `/admin` tem atalhos para elas no cabeçalho.
+- Texto provisório entre colchetes (ex.: `[CONTATO DE SUPORTE]`) é pendência, listada em `docs/pendencias.md`. Não invente dados reais.
 
 ## Firmware: cuidados
 

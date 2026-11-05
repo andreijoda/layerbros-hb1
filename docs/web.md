@@ -1,25 +1,73 @@
 # Site
 
-HTML, CSS e módulos ES puros. **Sem build e sem dependências.** A pasta `web/` é publicada como está.
+HTML, CSS e módulos ES puros. **Sem build e sem dependências.** A pasta `web/` é publicada como está no Cloudflare Pages (ver [deploy.md](deploy.md)).
 
-## Páginas
+## Telas
 
-| Caminho | Quem usa | O que faz |
+### Início (`/`), cliente
+
+| Desconectado | Conectado |
+|---|---|
+| ![Início desconectado](img/inicio-desconectado.png) | ![Início conectado](img/inicio-conectado.png) |
+
+- **Desconectado:** botão "Conectar freio de mão" e uma animação de um cabo USB-C entrando no freio, com o LED acendendo quando encaixa.
+- **Conectado:**
+  - posição ao vivo em % com barra;
+  - dados da placa: número de série, firmware, ID da placa, data de fabricação, sinal do sensor (ruído), leitura bruta e calibração;
+  - "Copiar dados para o suporte", que copia tudo isso mais o navegador usado.
+- Avisa quando o freio nunca foi calibrado.
+- Reconecta sozinho se o freio já foi autorizado neste navegador.
+- No celular, os blocos empilham ([print](img/inicio-celular.png)). Mesmo assim, a conexão USB só funciona no computador.
+
+### Recalibrar (`/recalibrar/`), cliente
+
+Conectar → soltar (`CAL MIN`) → puxar (`CAL MAX`) → testar → salvar (`SAVE`).
+
+| Curso curto | Teste antes de salvar | Salvo |
 |---|---|---|
-| `/` | Cliente | Conecta, mostra a posição ao vivo, dados da placa, "Copiar dados para o suporte". Reconecta sozinho se o freio já foi autorizado. |
-| `/recalibrar/` | Cliente | Conectar → soltar (`CAL MIN`) → puxar (`CAL MAX`) → testar → `SAVE` |
-| `/admin/` | Produção | Ver [producao.md](producao.md). Protegida pelo Cloudflare Access. |
+| ![Erro de curso](img/recalibrar-erro-curso.png) | ![Teste](img/recalibrar-teste.png) | ![Salvo](img/recalibrar-salvo.png) |
+
+- Curso menor que 400: o card do sensor treme, ganha borda vermelha e mostra a mensagem.
+- No passo de teste a % já usa a calibração nova (em RAM). Se a pessoa fechar a página sem salvar, a placa volta ao que estava gravado.
+
+### Produção (`/admin/`), operador
+
+Protegida pelo Cloudflare Access. O passo a passo do operador está em [producao.md](producao.md).
+
+| Calibrar | Registrar | Pronta |
+|---|---|---|
+| ![Calibrar](img/producao-calibrar.png) | ![Registrar](img/producao-registrar.png) | ![Pronta](img/producao-pronta.png) |
+
+- O cabeçalho escuro mostra o operador (e-mail vindo do Access), o firmware que será gravado e atalhos para **Início** e **Recalibrar**.
+- As telas do cliente **não** têm link para o `/admin`, de propósito.
 
 ## Módulos
 
 | Arquivo | Papel |
 |---|---|
-| `assets/js/hb1.js` | Classe `HB1`: Web Serial, fila de comandos, eventos `sample` e `disconnect` |
+| `assets/js/hb1.js` | Classe `HB1`: Web Serial, fila de comandos, eventos `sample` e `disconnect`, filtro USB |
 | `assets/js/picoboot.js` | Classe `Picoboot`: WebUSB + protocolo PICOBOOT do bootrom (apagar, gravar, verificar, reiniciar) |
 | `assets/js/uf2.js` | `parseUF2()`: converte o `.uf2` em setores de 4 KB |
-| `assets/js/ui.js` | Etapas, medidores, efeitos, mensagens de erro em português |
-| `assets/js/home.js`, `recalibrar.js`, `admin.js` | Lógica de cada página |
-| `assets/css/lb.css` | Tokens LayerBros (claro e escuro) e componentes |
+| `assets/js/ui.js` | Etapas, medidores, efeitos e mensagens de erro em português (`MESSAGES`) |
+| `assets/js/home.js`, `recalibrar.js`, `admin.js` | Lógica de cada tela |
+| `assets/css/lb.css` | Tokens LayerBros (claro e escuro), componentes e animações |
+| `assets/img/` | Logos do design system LayerBros e favicon |
+| `firmware/` | `.uf2` publicado + `manifest.json` (gerados por `tools/release-firmware.sh`) |
+| `_headers` | Cabeçalhos de segurança do Cloudflare |
+
+## Movimento
+
+Curto e com propósito; tudo desligado em `prefers-reduced-motion`.
+
+| Efeito | Onde |
+|---|---|
+| Entrada suave (`.rise`) | Títulos e cada passo dos assistentes |
+| Cabo USB-C conectando | Início desconectado |
+| Bolinha "Conectado" pulsando, anel no passo atual | Cabeçalho, listas de etapas |
+| Tremida + borda vermelha (Transitions.dev *error-state-shake*) | Curso curto (Recalibrar e Produção) |
+| ✓ desenhado (*success-check*) | Calibração salva, unidade pronta |
+| Brilho no texto (*shimmer-text*) + listras na barra | Gravando firmware, reiniciando em BOOT |
+| Dígitos subindo (*number-pop-in*) | Valores capturados na Produção |
 
 ## Navegadores
 
@@ -30,7 +78,7 @@ HTML, CSS e módulos ES puros. **Sem build e sem dependências.** A pasta `web/`
 | Firefox, Safari | Não | Não |
 | Celular | Não | Não (Android tem WebUSB, mas não Web Serial) |
 
-As páginas mostram um aviso e desativam os botões quando a API não existe. As APIs exigem HTTPS ou `localhost`.
+As telas mostram um aviso e desativam os botões quando a API não existe. As APIs exigem HTTPS ou `localhost`.
 
 ## Gravação de firmware (PICOBOOT)
 
@@ -43,24 +91,30 @@ Em modo BOOT a RP2040 expõe uma interface USB vendor (classe `0xFF`) com o prot
 5. `READ` de cada setor e comparação byte a byte.
 6. `REBOOT`.
 
-O ID único da placa vem do número de série USB tanto no modo BOOT quanto no firmware. A produção compara os dois para garantir que calibra a mesma placa que acabou de gravar.
+Antes de gravar, a produção baixa o `.uf2` indicado no `manifest.json` e confere o sha256.
 
-## Desenvolvimento
+O ID único da placa aparece como número de série USB tanto no modo BOOT quanto no firmware. A produção compara os dois para garantir que calibra a mesma placa que acabou de gravar.
+
+## Desenvolvimento e testes
 
 ```bash
 npm run dev
 ```
 
-Testes de ponta a ponta sem hardware (Playwright + Chromium):
+| Comando | O que faz |
+|---|---|
+| `npm run check` | Sintaxe de todos os módulos JS |
+| `npm test` | Testes `node:test` (UF2, manifest, limite da flash) |
+| `node tools/e2e.mjs` | As três telas num Chromium com HB-1 simulado, sem erros de JS e sem rolagem lateral em 375 px |
+| `node tools/screenshots.mjs` | Regera as imagens de `docs/img/` |
 
-```bash
-node tools/e2e.mjs
-```
-
-O `tools/fake-hb1.js` substitui `navigator.serial` por uma porta falsa que segue o protocolo. No teste, `window.__hb1.raw` simula a alavanca. A gravação USB não é simulada: teste com uma placa real.
+O `tools/fake-hb1.js` substitui `navigator.serial` por uma porta falsa que segue o [protocolo](protocolo-serial.md). Nos scripts, `window.__hb1.raw` simula a alavanca. **A gravação USB não é simulada:** teste com uma placa real.
 
 ## Segurança
 
-- `web/_headers` define CSP estrita (só scripts do próprio site; fontes do Google), `Permissions-Policy` liberando `serial` e `usb` só para o próprio site, e `noindex` no `/admin`.
+- `web/_headers`:
+  - CSP: só scripts do próprio site; estilos do site e do Google Fonts; nada de terceiros;
+  - `Permissions-Policy`: libera `serial` e `usb` só para o próprio site;
+  - `noindex` e `no-store` no `/admin`.
 - O `/admin` não tem senha no código: a proteção é do Cloudflare Access ([deploy.md](deploy.md)).
 - O site não envia dados para servidor nenhum. A lista da produção fica no `localStorage` do navegador do operador.

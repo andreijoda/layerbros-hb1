@@ -1,6 +1,12 @@
 # Produção: passo a passo do operador
 
-Endereço: `https://<seu-domínio>/admin/` (pede login do Cloudflare Access). Use o **Chrome** ou o **Edge** no computador.
+Endereço: **https://hb1.layerbros.com/admin/**. Use o **Chrome** ou o **Edge** no computador.
+
+- **Login:** digite seu e-mail e o código que chega nele. Vale por 24 h. Seu e-mail precisa estar liberado ([deploy.md](deploy.md#tarefas-do-dia-a-dia)).
+- **Cabeçalho:** mostra seu e-mail, o firmware que será gravado e atalhos para as telas do cliente (**Início** e **Recalibrar**). Use esses atalhos para conferir uma unidade como o cliente vai ver.
+- **Favoritos:** as telas do cliente não têm link para a produção. Salve o endereço nos favoritos.
+
+![Tela de produção](img/producao-conectar.png)
 
 ## Preparar o computador (uma vez)
 

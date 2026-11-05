@@ -4,7 +4,8 @@ O que falta antes de vender em escala. Marque ao resolver.
 
 ## Obrigatório
 
-- [ ] **Teste com hardware real.** Firmware e site foram compilados e testados com um HB-1 simulado; a gravação por WebUSB, a leitura do 49E e o joystick no Windows precisam ser confirmados numa placa de verdade.
+- [ ] **Teste com hardware real.** O firmware compila e o site foi testado de ponta a ponta com um HB-1 simulado. Precisam ser confirmados numa placa de verdade: a gravação por WebUSB (no Windows, com WinUSB via Zadig), a leitura do 49E, o LED e o joystick nos jogos.
+- [ ] **Login completo do `/admin`.** O bloqueio sem login foi conferido; falta entrar uma vez com o código por e-mail e confirmar que aparece "Operador: <seu e-mail>" no cabeçalho.
 - [ ] **PID USB próprio.** O PID `0x10C8` com o VID da Raspberry Pi (`0x2E8A`) é provisório. Peça um PID gratuito em https://github.com/raspberrypi/usb-pid (projeto com RP2040) e atualize `firmware/src/config.h`, `web/assets/js/hb1.js` e `tools/fake-hb1.js`.
 - [ ] **Contato de suporte** no rodapé de `web/index.html` (`[CONTATO DE SUPORTE]`).
 - [x] **Cloudflare Access** configurado e testado em `hb1.layerbros.com`, no `pages.dev` e nas prévias ([deploy.md](deploy.md)).
