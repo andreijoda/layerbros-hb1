@@ -172,6 +172,22 @@ a.help:hover { transform: translateY(-4px); background: var(--surface-3); color:
 .bars li.is-done { color: var(--ink); } .bars li.is-done::before { background: var(--ink); }
 .bars li.is-current { color: var(--ink); } .bars li.is-current::before { background: var(--laranja); }
 
+/* ---------- produção: métodos e guia */
+.methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.method { gap: 16px; }
+.howto { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 22px; color: var(--ink-2); }
+.howto strong { color: var(--ink); }
+
+.guide { display: flex; flex-direction: column; gap: 56px; }
+.guide section { scroll-margin-top: 24px; }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; }
+.steps-guide { list-style: none; counter-reset: passo; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.steps-guide li { counter-increment: passo; position: relative; display: flex; flex-direction: column; gap: 8px; padding: 24px 24px 24px 76px; border-radius: var(--r-xl); background: var(--surface-2); }
+.steps-guide li::before { content: counter(passo); position: absolute; left: 24px; top: 22px; width: 36px; height: 36px; border-radius: 9999px; display: grid; place-items: center; background: var(--laranja); color: var(--on-laranja); font-weight: 600; font-variation-settings: "MONO" 1; }
+.guide-table { font-variation-settings: "MONO" 0; font-size: 14px; line-height: 20px; }
+.guide-table td { white-space: normal; vertical-align: top; }
+.guide-table td:first-child { font-weight: 600; width: 34%; }
+
 /* ---------- avisos */
 .notice { display: flex; gap: 12px; align-items: flex-start; padding: 16px 20px; border-radius: var(--r-lg); background: var(--laranja-suave); color: var(--ink); font-size: 14px; line-height: 20px; }
 .alert { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; line-height: 20px; color: var(--erro); }

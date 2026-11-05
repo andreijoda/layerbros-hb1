@@ -88,7 +88,7 @@ async function page(path) {
   check(true, 'Produção carrega o firmware do manifest e confere o sha256');
   await pg.fill('#next-serial', '124');
   await pg.dispatchEvent('#next-serial', 'change');
-  await pg.click('#btn-cal-only');
+  await pg.click('#btn-connect-hb1');
   await pg.waitForSelector('[data-step="cal"]:not([hidden])');
   await pg.evaluate(() => { window.__hb1.raw = 600; });
   await pg.click('#btn-cap-min');
@@ -112,7 +112,7 @@ async function page(path) {
 {
   const ctx = await browser.newContext({ viewport: { width: 375, height: 800 } });
   const pg = await ctx.newPage();
-  for (const p of ['/', '/recalibrar/', '/admin/']) {
+  for (const p of ['/', '/recalibrar/', '/admin/', '/admin/guia/']) {
     await pg.goto(base + p);
     const over = await pg.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     check(over <= 0, `${p} cabe em 375 px de largura`);

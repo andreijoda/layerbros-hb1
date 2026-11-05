@@ -36,9 +36,9 @@ No Chrome do Windows o HB-1 aparece como **"HB-1 Config (Interface 0) (COMx)"**.
 
 ## Preparar o computador (uma vez)
 
-### Windows: driver da gravação
+### Windows: driver da gravação (só para o caminho B)
 
-O Windows não libera a interface de gravação da RP2040 para o navegador sem o driver **WinUSB**. Faça uma vez em cada PC de produção:
+Se preferir não instalar nada, use o caminho A, que dispensa driver. O Windows não libera a interface de gravação da RP2040 para o navegador sem o driver **WinUSB**. Faça uma vez em cada PC de produção:
 
 1. Baixe o **Zadig** em https://zadig.akeo.ie.
 2. Coloque uma placa em modo BOOT (segure BOOT e conecte).
@@ -69,19 +69,42 @@ Nada a fazer.
 
 ## Cada unidade
 
-1. **Conectar**
-   - Placa nova: segure **BOOT**, conecte o USB, solte. Clique em **Procurar placa** e escolha "RP2 Boot".
-   - Placa que já tem HB-1: conecte normalmente e clique em **Placa já tem HB-1**. Ela reinicia em BOOT sozinha. Na primeira vez com cada placa, o navegador pede um clique em **Selecionar RP2 Boot**.
-   - Só recalibrar ou registrar (sem regravar): **Só calibrar e registrar**.
-2. **Gravar firmware.** Clique em **Gravar firmware**. Grava, verifica byte a byte e reinicia (alguns segundos). Não desconecte o cabo.
-3. **Conectar o HB-1.** Em geral conecta sozinho. Se for a primeira vez com essa placa neste navegador, clique em **Conectar HB-1** e escolha "Handbrake HB-1" (no Windows aparece como **"HB-1 Config (Interface 0) (COMx)"**). A página confere que o ID da placa é o mesmo do passo 1.
-4. **Calibrar.**
-   - Alavanca solta → **Gravar repouso**.
-   - Alavanca no batente → **Gravar puxado**.
-   - Se aparecer "Curso menor que 400", confira o ímã e a distância do sensor.
-   - Confira o ruído (ideal ±6 ou menos).
-5. **Registrar.** Confira série, ID, calibração e data e clique em **Gravar e finalizar**. A página relê a placa para confirmar.
-6. **Pronto.** Desconecte, cole a etiqueta com a série mostrada e clique em **Próxima unidade**.
+A versão ilustrada deste passo a passo também está no site, em **https://hb1.layerbros.com/admin/guia/** (botão **Guia** no cabeçalho da produção).
+
+O passo 1 da tela tem dois caminhos:
+
+| | A. Arrastar o arquivo (recomendado) | B. Gravar pelo site |
+|---|---|---|
+| Driver | Nenhum, em nenhum sistema | WinUSB pelo Zadig, uma vez por PC Windows |
+| Conferência | O bootloader confere cada bloco | Leitura byte a byte depois de gravar |
+| Mesma placa? | Uma placa por vez na bancada | O site compara o ID entre BOOT e HB-1 |
+
+### Caminho A (padrão)
+
+1. **Modo BOOT:** segure **BOOT**, conecte o cabo e solte. Abre o pendrive **RPI-RP2**.
+2. **Firmware:**
+   - clique em **Baixar firmware** e arraste o `hb1-….uf2` para o **RPI-RP2**;
+   - o pendrive some e o LED começa a piscar laranja.
+3. **Conectar:** clique em **Conectar HB-1** e escolha **"HB-1 Config (Interface 0) (COMx)"** (no Mac: "Handbrake HB-1"). Com cada placa nova o navegador sempre pergunta.
+
+### Caminho B
+
+1. Segure **BOOT**, conecte e solte. Clique em **Procurar placa** e escolha **"RP2 Boot"**.
+2. Clique em **Gravar firmware**. Grava, confere e reinicia em alguns segundos. Não desconecte o cabo.
+3. O HB-1 costuma conectar sozinho. Se for a primeira vez com essa placa, clique em **Conectar HB-1**.
+
+Para regravar uma placa que já tem HB-1: conecte normalmente e clique em **Regravar uma placa HB-1**. Ela reinicia em BOOT sozinha. Na primeira vez com cada placa, o navegador pede um clique em **Selecionar RP2 Boot**.
+
+### Depois (os dois caminhos)
+
+4. **Calibrar:**
+   - alavanca solta → **Gravar repouso**;
+   - alavanca no batente → **Gravar puxado**;
+   - se aparecer "Curso menor que 400", confira o ímã e a distância do sensor;
+   - confira o ruído (ideal ±6 ou menos);
+   - se aparecer "firmware desatualizado", grave de novo antes de continuar.
+5. **Registrar:** confira série, ID, calibração e data e clique em **Gravar e finalizar**. A página relê a placa para confirmar.
+6. **Pronto:** desconecte, cole a etiqueta com a série mostrada e clique em **Próxima unidade**.
 
 O LED confirma: verde piscando ao salvar, depois verde fraco.
 

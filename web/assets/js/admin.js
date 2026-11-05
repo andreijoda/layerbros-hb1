@@ -94,6 +94,8 @@ async function loadFirmware() {
     if (latest.sha256 && hash !== latest.sha256) throw new Error('hash');
     firmware = { ...latest, ...parseUF2(buf) };
     $('#fw-chip').textContent = `Firmware ${latest.file}`;
+    $('#fw-download').href = `/firmware/${latest.file}`;
+    $('#fw-download').setAttribute('download', latest.file);
     $('#fw-file').textContent = `${latest.file} · ${(firmware.bytes / 1024).toFixed(0)} KB`;
   } catch {
     $('#fw-chip').textContent = 'Firmware indisponível';
@@ -141,8 +143,17 @@ $('#btn-pick-boot').addEventListener('click', (e) => busy(e.currentTarget, async
   $('#btn-pick-boot').hidden = true;
 }));
 
-$('#btn-cal-only').addEventListener('click', (e) => busy(e.currentTarget, async () => {
-  await hb.connect({ ask: true });
+// Caminho A: a placa já está com o firmware (arrastado para o RPI-RP2, ou retrabalho).
+// Sempre abre o seletor, para o operador escolher a placa que está na bancada.
+$('#btn-connect-hb1').addEventListener('click', (e) => busy(e.currentTarget, async () => {
+  let port;
+  try {
+    port = await navigator.serial.requestPort({ filters: [HB1_USB_FILTER] });
+  } catch {
+    return;
+  }
+  hb = new HB1();
+  await hb.connect({ port });
   await startCalibration();
 }));
 
@@ -238,6 +249,13 @@ async function startCalibration(info) {
   unit.min = null;
   unit.max = null;
   $('#cal-uid').textContent = `${info.uid} · fw ${info.fw}`;
+  const outdated = $('#fw-outdated');
+  if (firmware && info.fw !== firmware.version) {
+    outdated.textContent = `Esta placa está com o firmware ${info.fw}. A versão atual é ${firmware.version}: grave de novo (caminho A ou B) antes de calibrar.`;
+    outdated.hidden = false;
+  } else {
+    outdated.hidden = true;
+  }
   $('#cap-min').textContent = '—';
   $('#cap-max').textContent = '—';
   $('#cap-min').style.color = $('#cap-max').style.color = 'var(--muted)';
@@ -366,8 +384,11 @@ $('#btn-clear').addEventListener('click', () => {
 
 window.addEventListener('pagehide', () => { hb.close(); boot?.close(); });
 
-if (!requireApis(['usb', 'serial'], $('#browser-banner'))) {
+// Caminho A precisa só de Web Serial; caminho B precisa também de WebUSB.
+if (!requireApis(['serial'], $('#browser-banner'))) {
   for (const b of station.querySelectorAll('button')) b.disabled = true;
+} else if (!('usb' in navigator)) {
+  for (const id of ['#btn-find-boot', '#btn-from-hb1']) $(id).disabled = true;
 }
 $('#next-serial').value = nextNumber();
 renderSerialPreview();

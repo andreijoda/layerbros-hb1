@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Guia de produção · Handbrake HB-1</title>
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sono:wght,MONO@400..700,0..1&display=swap">
+  <link rel="stylesheet" href="/assets/css/lb.css">
+</head>
+<body>
+  <header class="hdr hdr--admin">
+    <div class="wrap hdr__row">
+      <div class="row" style="gap: 16px">
+        <img class="hdr__logo" src="/assets/img/layerbros-horizontal-branco.svg" alt="layerbros">
+        <span class="chip chip--accent">Produção</span>
+      </div>
+      <nav class="hdr__nav" aria-label="Produção e telas do cliente">
+        <a class="pill pill--on-dark" href="/admin/">Voltar à produção</a>
+        <a class="pill pill--on-dark" href="/">Início</a>
+        <a class="pill pill--on-dark" href="/recalibrar/">Recalibrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap guide">
+    <div class="stack-sm">
+      <h1 class="h1 rise">Guia de produção</h1>
+      <p class="lead rise d1">Como gravar, calibrar e registrar cada HB-1. Leia uma vez inteira; depois use só o passo a passo.</p>
+    </div>
+
+    <nav class="toc" aria-label="Neste guia">
+      <a class="pill" href="#antes">Antes de começar</a>
+      <a class="pill" href="#modos">Os dois modos</a>
+      <a class="pill" href="#passo">Cada unidade</a>
+      <a class="pill" href="#zadig">Driver do Windows</a>
+      <a class="pill" href="#problemas">Problemas</a>
+    </nav>
+
+    <section id="antes" class="stack">
+      <h2 class="h2">Antes de começar</h2>
+      <div class="grid-help">
+        <div class="help">
+          <span class="title">Computador</span>
+          <span class="body-sm">Chrome ou Edge, no computador. Windows, Mac ou Linux. Safari e Firefox não conectam em USB.</span>
+        </div>
+        <div class="help">
+          <span class="title">Cabo de dados</span>
+          <span class="body-sm">Cabo USB-C que transmite dados. Cabo só de carga liga o LED, mas o PC não vê a placa. Evite hub; ligue direto no PC.</span>
+        </div>
+        <div class="help">
+          <span class="title">Placa montada</span>
+          <span class="body-sm">Sensor 49E soldado (3V3, GND, GP26) e ímã no lugar. <strong>Sem o sensor não dá para calibrar</strong>: a leitura fica solta, em torno de 20 %.</span>
+        </div>
+      </div>
+      <div class="notice">
+        <strong>Regras de ouro:</strong>&nbsp;uma aba do site por vez · sensor montado antes de calibrar · o Zadig, se usar, só em “RP2 Boot (Interface 1)”.
+      </div>
+    </section>
+
+    <section id="modos" class="stack">
+      <h2 class="h2">Os dois modos da placa</h2>
+      <p class="body-sm" style="font-size: 16px; line-height: 24px; max-width: 720px">A mesma placa aparece no computador de dois jeitos diferentes. Saber em qual modo ela está resolve quase todos os problemas.</p>
+      <div class="methods">
+        <div class="card card--pad" style="background: var(--surface-2)">
+          <div class="row" style="justify-content: space-between">
+            <h3 class="title">Modo BOOT · “RP2 Boot”</h3>
+            <span class="chip">LED apagado</span>
+          </div>
+          <p class="body-sm">Placa nova, ou ligada segurando o botão <strong>BOOT</strong>. Serve só para receber o firmware. Vem de fábrica no chip e nunca se apaga: dá sempre para recomeçar.</p>
+          <dl class="facts facts--2">
+            <div class="card"><dt>Interface 0</dt><dd>Pendrive RPI-RP2</dd></div>
+            <div class="card"><dt>Interface 1</dt><dd>Gravação (PICOBOOT)</dd></div>
+          </dl>
+        </div>
+        <div class="card card--pad" style="background: var(--surface-2)">
+          <div class="row" style="justify-content: space-between">
+            <h3 class="title">Modo HB-1 · “Handbrake HB-1”</h3>
+            <span class="chip chip--soft">LED aceso</span>
+          </div>
+          <p class="body-sm">Firmware rodando: é assim que o cliente usa. O LED pisca laranja se nunca foi calibrado e fica verde fraco quando está pronto.</p>
+          <dl class="facts facts--2">
+            <div class="card"><dt>Interface 0</dt><dd>Porta serial (COM)</dd></div>
+            <div class="card"><dt>Interface 2</dt><dd>Joystick</dd></div>
+          </dl>
+        </div>
+      </div>
+      <p class="caption">No Windows, a porta do HB-1 aparece no Chrome como “HB-1 Config (Interface 0) (COM…)”. No Mac aparece como “Handbrake HB-1”.</p>
+    </section>
+
+    <section id="passo" class="stack">
+      <h2 class="h2">Cada unidade, passo a passo</h2>
+      <p class="body-sm" style="font-size: 16px; line-height: 24px; max-width: 720px">Este é o caminho <strong>A</strong> da tela de produção: não precisa de driver em nenhum computador.</p>
+      <ol class="steps-guide">
+        <li>
+          <h3 class="title">Entre em modo BOOT</h3>
+          <p class="body-sm">Segure o botão <strong>BOOT</strong> da placa, conecte o cabo e solte. Abre um pendrive chamado <strong class="mono">RPI-RP2</strong> (com um .txt e um .htm dentro, que são normais).</p>
+        </li>
+        <li>
+          <h3 class="title">Coloque o firmware</h3>
+          <p class="body-sm">Na produção, clique em <strong>Baixar firmware</strong> e arraste o arquivo <span class="mono">hb1-….uf2</span> para o <strong class="mono">RPI-RP2</strong>. O pendrive some e o LED começa a piscar laranja.</p>
+        </li>
+        <li>
+          <h3 class="title">Conecte o HB-1</h3>
+          <p class="body-sm">Clique em <strong>Conectar HB-1</strong> e escolha <strong>“HB-1 Config (COM…)”</strong>. Na primeira vez com cada placa o navegador sempre pergunta: é normal.</p>
+        </li>
+        <li>
+          <h3 class="title">Calibre</h3>
+          <p class="body-sm">Alavanca solta → <strong>Gravar repouso</strong>. Alavanca no batente → <strong>Gravar puxado</strong>. Confira o ruído (bom: ±6 ou menos). Se aparecer “curso menor que 400”, ajuste o ímã.</p>
+        </li>
+        <li>
+          <h3 class="title">Registre</h3>
+          <p class="body-sm">Confira série, ID da placa, calibração e data. Clique em <strong>Gravar e finalizar</strong>. O LED pisca verde 3 vezes.</p>
+        </li>
+        <li>
+          <h3 class="title">Etiquete e próxima</h3>
+          <p class="body-sm">Cole a etiqueta com a série mostrada, desconecte e clique em <strong>Próxima unidade</strong>. No fim do dia, <strong>Baixar CSV</strong>.</p>
+        </li>
+      </ol>
+      <div class="card card--pad" style="background: var(--surface-2)">
+        <h3 class="title">Caminho B: gravar pelo site</h3>
+        <p class="body-sm">Troca os passos 1 a 3 por um só: segure BOOT, conecte, clique em <strong>Procurar placa</strong> e escolha “RP2 Boot”. O site grava, confere byte a byte e segue para a calibração. No Windows precisa do driver abaixo, instalado uma vez por computador.</p>
+      </div>
+    </section>
+
+    <section id="zadig" class="stack">
+      <h2 class="h2">Driver do Windows (só para o caminho B)</h2>
+      <p class="body-sm" style="font-size: 16px; line-height: 24px; max-width: 720px">O Windows não deixa o navegador usar a gravação do modo BOOT sem o driver WinUSB. Faça <strong>uma vez</strong> em cada computador de produção. Mac e Linux não precisam. O cliente nunca precisa.</p>
+      <ol class="steps-guide" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+        <li>
+          <h3 class="title">Baixe o Zadig</h3>
+          <p class="body-sm">Em <a href="https://zadig.akeo.ie" rel="noopener">zadig.akeo.ie</a>. É um programa só, não precisa instalar.</p>
+        </li>
+        <li>
+          <h3 class="title">Placa em modo BOOT</h3>
+          <p class="body-sm">Segure <strong>BOOT</strong> e conecte. Precisa estar em BOOT (LED apagado, pendrive RPI-RP2 aberto).</p>
+        </li>
+        <li>
+          <h3 class="title">Escolha a interface certa</h3>
+          <p class="body-sm">No Zadig: <strong>Options → List All Devices</strong>. Na lista, escolha <strong>RP2 Boot (Interface 1)</strong>.</p>
+        </li>
+        <li>
+          <h3 class="title">Instale o WinUSB</h3>
+          <p class="body-sm">À direita da seta verde deve estar <strong>WinUSB</strong>. Clique em <strong>Install Driver</strong> e espere. Pronto: não abra mais o Zadig.</p>
+        </li>
+      </ol>
+      <div class="notice">
+        <span><strong>Nunca</strong> aplique o Zadig em “Handbrake HB-1”, “HB-1 Config” ou “HB-1 Joystick”. Isso tira a porta serial e o site deixa de achar o freio. Se já aconteceu, veja “A lista do Chrome abre vazia” abaixo.</span>
+      </div>
+    </section>
+
+    <section id="problemas" class="stack">
+      <h2 class="h2">Problemas comuns</h2>
+      <div class="table-box">
+        <table class="guide-table">
+          <thead><tr><th scope="col">O que acontece</th><th scope="col">O que fazer</th></tr></thead>
+          <tbody>
+            <tr><td>O pendrive RPI-RP2 não aparece</td><td>Segure BOOT <em>antes</em> de conectar e solte depois. Troque o cabo (precisa ser de dados).</td></tr>
+            <tr><td>A lista do Chrome abre vazia, com o LED piscando</td><td>Zadig aplicado no HB-1. Zadig → Options → List All Devices → <strong>Handbrake HB-1 (Interface 0)</strong> → driver <strong>USB Serial (CDC)</strong> → Replace Driver. Reconecte.</td></tr>
+            <tr><td>A lista do Chrome abre vazia, com o LED apagado</td><td>A placa está em modo BOOT. Arraste o firmware (passo 2) ou reconecte sem segurar BOOT.</td></tr>
+            <tr><td>“A porta está em uso”</td><td>Feche as outras abas do site e programas como Arduino IDE, Cura ou monitor serial.</td></tr>
+            <tr><td>Leitura em ~20 % que oscila e não muda ao puxar</td><td>Sensor não ligado: confira 3V3, GND e o fio OUT no GP26.</td></tr>
+            <tr><td>“Curso menor que 400”</td><td>Ímã longe ou fraco. Aproxime ou use um mais forte e grave de novo.</td></tr>
+            <tr><td>Ruído alto (±15 ou mais)</td><td>Fio do sensor longo ou perto de fonte de ruído. Capacitor de 100 nF entre 3V3 e GND, perto do sensor.</td></tr>
+            <tr><td>“Firmware desatualizado” na calibração</td><td>Grave de novo pelo caminho A ou B antes de calibrar.</td></tr>
+            <tr><td>Quer apagar tudo e recomeçar</td><td>Em BOOT, arraste o <a href="https://datasheets.raspberrypi.com/soft/flash_nuke.uf2" rel="noopener">flash_nuke.uf2</a> oficial da Raspberry Pi. A placa volta a ser nova (apaga também série e calibração).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ftr">
+    <div class="wrap">
+      <span>Handbrake HB-1 · guia de produção</span>
+      <a href="/admin/">Voltar à produção</a>
+    </div>
+  </footer>
+</body>
+</html>

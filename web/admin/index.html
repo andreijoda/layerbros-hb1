@@ -22,6 +22,7 @@
       <nav class="hdr__nav" aria-label="Telas do cliente">
         <a class="pill pill--on-dark" href="/">Início</a>
         <a class="pill pill--on-dark" href="/recalibrar/">Recalibrar</a>
+        <a class="pill pill--on-dark" href="/admin/guia/">Guia</a>
       </nav>
       <div class="row caption">
         <span>Operador: <span id="operator">—</span></span>
@@ -80,24 +81,57 @@
           </div>
 
           <!-- 1. Conectar -->
-          <div class="stack" data-step="connect" style="align-items: flex-start">
-            <h2 class="h3">1. Conecte a placa em modo BOOT</h2>
-            <ol class="body-sm" style="padding-left: 20px; font-size: 16px; line-height: 24px; display: flex; flex-direction: column; gap: 8px">
-              <li>Segure o botão <strong>BOOT</strong> da RP2040-Zero.</li>
-              <li>Ligue o cabo USB e solte o botão.</li>
-              <li>Clique em Procurar placa e escolha “RP2 Boot”.</li>
-            </ol>
-            <div class="row">
-              <button type="button" class="btn btn--primary" id="btn-find-boot">
-                <svg class="breathe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                Procurar placa
-              </button>
-              <button type="button" class="btn btn--tertiary" id="btn-from-hb1">Placa já tem HB-1</button>
+          <div class="stack" data-step="connect">
+            <div class="stack-sm" style="gap: 8px">
+              <h2 class="h3">1. Colocar o firmware na placa</h2>
+              <p class="body-sm">Escolha um dos dois jeitos. Dúvida? Veja o <a href="/admin/guia/">guia de produção</a>.</p>
             </div>
-            <button type="button" class="btn btn--tertiary btn--small" id="btn-cal-only">Só calibrar e registrar (sem gravar firmware)</button>
-            <div class="stack-sm" id="boot-wait" hidden>
-              <p class="body-sm"><span class="t-shimmer" data-text="Reiniciando em modo BOOT…">Reiniciando em modo BOOT…</span></p>
-              <button type="button" class="btn btn--primary" id="btn-pick-boot" hidden>Selecionar RP2 Boot</button>
+
+            <div class="methods">
+              <section class="card card--pad method" aria-labelledby="m-a">
+                <div class="row" style="justify-content: space-between">
+                  <h3 class="title" id="m-a">A. Arrastar o arquivo</h3>
+                  <span class="chip chip--soft">Recomendado · sem driver</span>
+                </div>
+                <ol class="howto">
+                  <li>Segure o botão <strong>BOOT</strong>, conecte o cabo e solte. Abre o pendrive <strong class="mono">RPI-RP2</strong>.</li>
+                  <li>Baixe o firmware e arraste o arquivo para o <strong class="mono">RPI-RP2</strong>.</li>
+                  <li>A placa reinicia sozinha e o LED começa a piscar.</li>
+                  <li>Clique em <strong>Conectar HB-1</strong> e escolha <strong>“HB-1 Config (COM…)”</strong> (no Mac: “Handbrake HB-1”).</li>
+                </ol>
+                <div class="row">
+                  <a class="btn btn--tertiary" id="fw-download" href="/firmware/" download>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                    Baixar firmware
+                  </a>
+                  <button type="button" class="btn btn--primary" id="btn-connect-hb1">Conectar HB-1</button>
+                </div>
+                <p class="caption">Placa que já tem o firmware (retrabalho ou só calibrar)? Pule direto para <strong>Conectar HB-1</strong>.</p>
+              </section>
+
+              <section class="card card--pad method" aria-labelledby="m-b">
+                <div class="row" style="justify-content: space-between">
+                  <h3 class="title" id="m-b">B. Gravar pelo site</h3>
+                  <span class="chip">Confere byte a byte</span>
+                </div>
+                <ol class="howto">
+                  <li>Segure <strong>BOOT</strong>, conecte e solte.</li>
+                  <li>Clique em <strong>Procurar placa</strong> e escolha <strong>“RP2 Boot”</strong>.</li>
+                  <li>O site grava, confere e já segue para a calibração.</li>
+                </ol>
+                <p class="caption">No Windows, precisa do driver WinUSB instalado <strong>uma vez</strong> neste PC (<a href="/admin/guia/#zadig">como instalar</a>). Mac e Linux não precisam.</p>
+                <div class="row">
+                  <button type="button" class="btn btn--secondary" id="btn-find-boot">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                    Procurar placa
+                  </button>
+                  <button type="button" class="btn btn--tertiary btn--small" id="btn-from-hb1">Regravar uma placa HB-1</button>
+                </div>
+                <div class="stack-sm" id="boot-wait" hidden>
+                  <p class="body-sm"><span class="t-shimmer" data-text="Reiniciando em modo BOOT…">Reiniciando em modo BOOT…</span></p>
+                  <button type="button" class="btn btn--primary" id="btn-pick-boot" hidden>Selecionar RP2 Boot</button>
+                </div>
+              </section>
             </div>
           </div>
 
@@ -129,6 +163,7 @@
           <div class="stack" data-step="cal" hidden>
             <h2 class="h3">3. Calibrar</h2>
             <p class="label ok">HB-1 conectado · <span id="cal-uid"></span></p>
+            <div class="notice" id="fw-outdated" hidden></div>
             <div class="card card--pad">
               <div class="row" style="justify-content: space-between; align-items: baseline">
                 <span class="caption">Sensor 49E · GPIO26 · ruído <span id="cal-noise">—</span></span>

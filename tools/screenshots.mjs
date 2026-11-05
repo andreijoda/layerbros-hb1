@@ -103,7 +103,7 @@ const settle = (page) => page.waitForTimeout(500);
   await page.reload();
   await page.waitForFunction(() => document.querySelector('#fw-chip').textContent.includes('hb1-'));
   await shot(page, 'producao-conectar');
-  await page.click('#btn-cal-only');
+  await page.click('#btn-connect-hb1');
   await page.waitForSelector('[data-step="cal"]:not([hidden])');
   await lever(page, 608);
   await page.click('#btn-cap-min');
@@ -121,6 +121,14 @@ const settle = (page) => page.waitForTimeout(500);
   await page.waitForSelector('[data-step="done"]:not([hidden])');
   await settle(page);
   await shot(page, 'producao-pronta');
+  await ctx.close();
+}
+
+// Guia de produção
+{
+  const { page, ctx } = await open('/admin/guia/', { preset: false });
+  await settle(page);
+  await shot(page, 'producao-guia', true);
   await ctx.close();
 }
 

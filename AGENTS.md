@@ -21,6 +21,7 @@ web/
   index.html          Início: conectar, teste ao vivo, dados para suporte
   recalibrar/         assistente de recalibração do cliente
   admin/              produção (protegida pelo Cloudflare Access)
+  admin/guia/         guia do operador, dentro do site (mantenha igual a docs/producao.md)
   assets/js/hb1.js        Web Serial + protocolo
   assets/js/picoboot.js   WebUSB + PICOBOOT (grava firmware no modo BOOT)
   assets/js/uf2.js        leitura de UF2

@@ -38,7 +38,14 @@ Protegida pelo Cloudflare Access. O passo a passo do operador está em [producao
 |---|---|---|
 | ![Calibrar](img/producao-calibrar.png) | ![Registrar](img/producao-registrar.png) | ![Pronta](img/producao-pronta.png) |
 
-- O cabeçalho escuro mostra o operador (e-mail vindo do Access), o firmware que será gravado e atalhos para **Início** e **Recalibrar**.
+- O cabeçalho escuro mostra o operador (e-mail vindo do Access), o firmware que será gravado e atalhos para **Início**, **Recalibrar** e **Guia**.
+- **Passo 1 com dois caminhos:**
+  - **A. Arrastar o arquivo:** sem driver. "Baixar firmware" + "Conectar HB-1". Precisa só de Web Serial.
+  - **B. Gravar pelo site:** WebUSB/PICOBOOT. No Windows exige WinUSB uma vez.
+- Na calibração, avisa se o firmware da placa não é o `latest` do manifest.
+- **`/admin/guia/`**: guia ilustrado do operador (modos da placa, passo a passo, Zadig, problemas). Também fica atrás do Access, por estar em `/admin/*`.
+
+![Guia de produção](img/producao-guia.png)
 - As telas do cliente **não** têm link para o `/admin`, de propósito.
 
 ## Módulos

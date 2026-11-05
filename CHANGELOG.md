@@ -4,7 +4,12 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões d
 
 ## [Não lançado]
 
+### Adicionado
+- Produção: guia do operador dentro do site (`/admin/guia/`), com os modos da placa, passo a passo, instalação do driver no Windows e problemas comuns.
+- Produção: aviso de firmware desatualizado na calibração.
+
 ### Alterado
+- Produção, passo 1 com dois caminhos: **A. Arrastar o arquivo** (padrão, sem driver; botões "Baixar firmware" e "Conectar HB-1") e **B. Gravar pelo site** (WebUSB; Zadig uma vez no Windows). "Só calibrar e registrar" virou "Conectar HB-1"; "Placa já tem HB-1" virou "Regravar uma placa HB-1".
 - Telas avisam que, no Windows, o freio aparece na janela do Chrome como "HB-1 Config (COM…)" e não como "Handbrake HB-1".
 
 ### Documentação
