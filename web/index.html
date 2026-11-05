@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Handbrake HB-1 · LayerBros</title>
+  <meta name="description" content="Conecte, teste e recalibre o seu freio de mão LayerBros HB-1 pelo navegador.">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sono:wght,MONO@400..700,0..1&display=swap">
+  <link rel="stylesheet" href="/assets/css/lb.css">
+  <script type="module" src="/assets/js/home.js"></script>
+</head>
+<body>
+  <div class="ticker" role="region" aria-label="Avisos">
+    <div class="ticker__track">
+      <span>Calibração salva no próprio freio</span><span>Funciona em qualquer jogo que aceite joystick</span>
+      <span>Recalibre em um minuto pelo navegador</span><span>Chrome ou Edge, no computador</span>
+      <span aria-hidden="true">Calibração salva no próprio freio</span><span aria-hidden="true">Funciona em qualquer jogo que aceite joystick</span>
+      <span aria-hidden="true">Recalibre em um minuto pelo navegador</span><span aria-hidden="true">Chrome ou Edge, no computador</span>
+    </div>
+  </div>
+
+  <header class="hdr">
+    <div class="wrap hdr__row">
+      <a href="/" aria-label="layerbros, início">
+        <img class="hdr__logo logo-light" src="/assets/img/layerbros-horizontal-tinta.svg" alt="layerbros">
+        <img class="hdr__logo logo-dark" src="/assets/img/layerbros-horizontal-branco.svg" alt="" aria-hidden="true">
+      </a>
+      <nav class="hdr__nav" aria-label="Principal">
+        <a class="pill" href="/" aria-current="page">Início</a>
+        <a class="pill" href="/recalibrar/">Recalibrar</a>
+      </nav>
+      <span class="chip" id="status" role="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Desconectado</span></span>
+    </div>
+  </header>
+
+  <main class="wrap stack" style="gap: 48px">
+    <div class="notice" id="browser-banner" hidden>
+      Este navegador não conecta em USB. Abra esta página no <strong>Chrome</strong> ou no <strong>Edge</strong>, no computador.
+    </div>
+
+    <section class="split">
+      <div class="stack">
+        <span class="chip chip--soft rise d1" style="align-self: flex-start">Freio de mão para simulador</span>
+        <h1 class="h1 rise d2">Handbrake HB-1</h1>
+        <p class="lead rise d3">Ligue o freio no USB, clique em conectar e confira se ele vai de 0 a 100%. Se não for, recalibre em um minuto, aqui mesmo.</p>
+        <div class="row rise d4">
+          <button type="button" class="btn btn--primary btn--glow" id="btn-connect">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>
+            Conectar freio de mão
+          </button>
+          <div class="row" id="connected-actions" hidden>
+            <a class="btn btn--primary" href="/recalibrar/">Recalibrar agora</a>
+            <button type="button" class="btn btn--tertiary" id="btn-disconnect">Desconectar</button>
+          </div>
+        </div>
+        <div class="alert" id="home-alert" role="alert" hidden>
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          <span class="alert__text"></span>
+        </div>
+        <p class="caption rise d5">Funciona no Chrome e no Edge, no computador. O navegador vai pedir para você escolher “Handbrake HB-1”.</p>
+      </div>
+
+      <div class="panel rise d3">
+        <div id="panel-empty" class="stack-sm" style="align-items: flex-start">
+          <div class="lever-art" style="align-self: stretch">
+            <svg width="160" height="140" viewBox="0 0 160 140" fill="none" aria-hidden="true">
+              <rect x="20" y="112" width="120" height="16" rx="8" fill="var(--surface-3)"/>
+              <g class="lever">
+                <rect x="52" y="20" width="16" height="96" rx="8" fill="var(--ink)"/>
+                <rect x="46" y="10" width="28" height="28" rx="14" fill="var(--laranja)"/>
+              </g>
+              <circle cx="60" cy="112" r="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="3"/>
+              <path class="nudge" d="M112 44v32m-10-10 10 10 10-10" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2 class="title">Nenhum freio conectado</h2>
+          <p class="body-sm">Use um cabo USB de dados (alguns cabos só carregam). Depois de conectar, a leitura do sensor aparece aqui ao vivo.</p>
+        </div>
+
+        <div id="panel-live" class="stack rise" hidden>
+          <div class="row" style="justify-content: space-between">
+            <h2 class="title">Teste ao vivo</h2>
+            <span class="caption">Puxe a alavanca</span>
+          </div>
+          <div class="row" style="align-items: baseline; gap: 8px">
+            <span class="big-num" id="live-pct">0</span>
+            <span class="h3 mono" style="color: var(--muted)">%</span>
+          </div>
+          <div class="meter" id="live-meter" role="meter" aria-label="Posição do freio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="meter__fill" id="live-meter-fill"></div>
+          </div>
+          <div class="notice" id="uncal-notice" hidden>Este freio ainda não foi calibrado. <a href="/recalibrar/">Calibrar agora</a></div>
+          <dl class="facts">
+            <div class="card"><dt>Número de série</dt><dd id="f-serial">—</dd></div>
+            <div class="card"><dt>ID da placa</dt><dd id="f-uid">—</dd></div>
+            <div class="card"><dt>Firmware</dt><dd id="f-fw">—</dd></div>
+            <div class="card"><dt>Fabricado em</dt><dd id="f-mfg">—</dd></div>
+            <div class="card"><dt>Sinal do sensor</dt><dd id="f-noise">—</dd></div>
+            <div class="card"><dt>Leitura bruta</dt><dd id="f-raw">—</dd></div>
+            <div class="card"><dt>Calibrado em</dt><dd id="f-range">—</dd></div>
+          </dl>
+          <button type="button" class="btn btn--small" id="btn-copy" style="align-self: flex-start; background: var(--surface); color: var(--ink)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+            <span id="copy-label" aria-live="polite">Copiar dados para o suporte</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stack" aria-labelledby="ajuda">
+      <h2 class="h2" id="ajuda">Algo estranho no jogo?</h2>
+      <div class="grid-help">
+        <a class="help" href="/recalibrar/">
+          <span class="title">Não chega a 100%</span>
+          <span class="body-sm">Ou já começa um pouco acionado. Recalibre: solta, puxa, salva.</span>
+          <span class="body-sm" style="color: var(--laranja-texto); font-weight: 600">Recalibrar</span>
+        </a>
+        <div class="help">
+          <span class="title">O jogo não reconhece</span>
+          <span class="body-sm">No Windows, procure “Configurar controladores de jogo USB”. O HB-1 aparece como joystick de um eixo e um botão.</span>
+        </div>
+        <div class="help">
+          <span class="title">Não aparece para conectar</span>
+          <span class="body-sm">Troque o cabo ou a porta USB e feche outros programas ou abas que usem a porta do freio.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ftr">
+    <div class="wrap">
+      <span>Handbrake HB-1 · feito pelos Bros</span>
+      <!-- TODO(suporte): trocar pelo contato real. Ver docs/pendencias.md -->
+      <span>Precisa de ajuda? [CONTATO DE SUPORTE]</span>
+    </div>
+  </footer>
+</body>
+</html>

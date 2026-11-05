@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  firmware:
+    name: Firmware (RP2040)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib cmake
+
+      - name: Pico SDK 2.1.1
+        run: |
+          git clone --depth 1 --branch 2.1.1 https://github.com/raspberrypi/pico-sdk.git "$RUNNER_TEMP/pico-sdk"
+          git -C "$RUNNER_TEMP/pico-sdk" submodule update --init --depth 1 lib/tinyusb
+
+      - name: Build
+        env:
+          PICO_SDK_PATH: ${{ runner.temp }}/pico-sdk
+        run: |
+          cmake -S firmware -B firmware/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build firmware/build -j4
+
+      - name: Versão do manifest bate com o firmware
+        run: |
+          V=$(sed -n 's/^#define HB1_FW_VERSION "\(.*\)"/\1/p' firmware/src/config.h)
+          grep -q "\"version\": \"$V\"" web/firmware/manifest.json || { echo "manifest.json não está na versão $V. Rode tools/release-firmware.sh"; exit 1; }
+          test -f "web/firmware/hb1-$V.uf2"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hb1-firmware
+          path: |
+            firmware/build/hb1.uf2
+            firmware/build/hb1.elf
+
+  web:
+    name: Site
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Sintaxe dos módulos
+        run: for f in web/assets/js/*.js; do node --check "$f"; done
+      - name: Testes
+        run: npm test

@@ -1,0 +1,14 @@
+# Build do firmware
+firmware/build/
+build/
+
+# Node / ferramentas
+node_modules/
+.wrangler/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

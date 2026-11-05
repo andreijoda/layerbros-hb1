@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recalibrar · Handbrake HB-1</title>
+  <meta name="description" content="Recalibre o freio de mão LayerBros HB-1 em três passos.">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sono:wght,MONO@400..700,0..1&display=swap">
+  <link rel="stylesheet" href="/assets/css/lb.css">
+  <script type="module" src="/assets/js/recalibrar.js"></script>
+</head>
+<body>
+  <header class="hdr">
+    <div class="wrap hdr__row">
+      <a href="/" aria-label="layerbros, início">
+        <img class="hdr__logo logo-light" src="/assets/img/layerbros-horizontal-tinta.svg" alt="layerbros">
+        <img class="hdr__logo logo-dark" src="/assets/img/layerbros-horizontal-branco.svg" alt="" aria-hidden="true">
+      </a>
+      <nav class="hdr__nav" aria-label="Principal">
+        <a class="pill" href="/">Início</a>
+        <a class="pill" href="/recalibrar/" aria-current="page">Recalibrar</a>
+      </nav>
+      <span class="chip" id="status" role="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Desconectado</span></span>
+    </div>
+  </header>
+
+  <main class="wrap stack" style="gap: 32px">
+    <div class="notice" id="browser-banner" hidden>
+      Este navegador não conecta em USB. Abra esta página no <strong>Chrome</strong> ou no <strong>Edge</strong>, no computador.
+    </div>
+
+    <div class="stack-sm">
+      <h1 class="h1 rise">Recalibrar</h1>
+      <p class="lead rise d1">Três passos, um minuto. A calibração fica salva no próprio freio, então vale para qualquer jogo e qualquer PC.</p>
+    </div>
+
+    <div class="sidebar-layout">
+      <ol class="steps" id="steps" aria-label="Etapas">
+        <li class="step" data-key="connect"><span class="step__num">1</span>Conectar</li>
+        <li class="step" data-key="rest"><span class="step__num">2</span>Soltar a alavanca</li>
+        <li class="step" data-key="pull"><span class="step__num">3</span>Puxar até o fim</li>
+        <li class="step" data-key="review"><span class="step__num">4</span>Testar e salvar</li>
+      </ol>
+
+      <section class="panel" id="wizard" aria-live="polite">
+        <!-- 1. Conectar -->
+        <div class="stack" data-step="connect" style="align-items: flex-start">
+          <span class="label">Passo 1 de 3</span>
+          <h2 class="h2">Conecte o freio</h2>
+          <p class="body-sm" style="font-size: 16px; line-height: 24px; max-width: 520px">Ligue o HB-1 no USB e clique abaixo. Na janela do navegador, escolha “Handbrake HB-1” e clique em Conectar.</p>
+          <button type="button" class="btn btn--primary" id="btn-connect">Conectar freio de mão</button>
+          <div class="alert" id="alert-connect" role="alert" hidden>
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <span class="alert__text"></span>
+          </div>
+        </div>
+
+        <!-- 2. Soltar -->
+        <div class="stack" data-step="rest" hidden>
+          <div class="stack-sm">
+            <span class="label">Passo 2 de 3</span>
+            <h2 class="h2 row" style="gap: 12px">Solte a alavanca
+              <svg class="ic breathe" style="width: 28px; height: 28px; stroke: var(--muted)" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            </h2>
+            <p class="body-sm" style="font-size: 16px; line-height: 24px; max-width: 560px">Deixe a alavanca parada na posição de descanso, sem encostar. Quando o número parar de mudar, grave.</p>
+          </div>
+          <div class="card card--pad">
+            <div class="row" style="justify-content: space-between; align-items: baseline">
+              <span class="caption">Leitura do sensor, ao vivo</span>
+              <span class="h2 mono" id="raw-rest">—</span>
+            </div>
+            <div class="meter" aria-hidden="true"><div class="meter__fill meter__fill--ink" id="fill-rest"></div></div>
+            <div class="meter-scale caption mono"><span>0</span><span>4095</span></div>
+          </div>
+          <div class="alert" id="alert-rest" role="alert" hidden>
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <span class="alert__text"></span>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn--primary" id="btn-rest">Gravar repouso</button>
+            <button type="button" class="btn btn--tertiary" id="btn-back-rest">Voltar</button>
+          </div>
+        </div>
+
+        <!-- 3. Puxar -->
+        <div class="stack" data-step="pull" hidden>
+          <div class="stack-sm">
+            <span class="label">Passo 3 de 3</span>
+            <h2 class="h2 row" style="gap: 12px">Puxe até o fim
+              <svg class="ic nudge" style="width: 28px; height: 28px; stroke: var(--laranja-texto); stroke-width: 2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+            </h2>
+            <p class="body-sm" style="font-size: 16px; line-height: 24px; max-width: 560px">Puxe a alavanca até o batente e segure. Grave com ela lá embaixo.</p>
+          </div>
+          <div class="card card--pad" id="card-pull">
+            <div class="row" style="justify-content: space-between; align-items: baseline">
+              <span class="caption">Leitura do sensor, ao vivo</span>
+              <span class="h2 mono" id="raw-pull">—</span>
+            </div>
+            <div class="meter" aria-hidden="true">
+              <div class="meter__fill meter__fill--ink" id="fill-pull"></div>
+              <div class="meter__mark" id="min-mark" hidden></div>
+            </div>
+            <div class="meter-scale caption mono"><span>0</span><span>4095</span></div>
+          </div>
+          <div class="alert" id="alert-pull" role="alert" hidden>
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <span class="alert__text"></span>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn--primary" id="btn-pull">Gravar puxado</button>
+            <button type="button" class="btn btn--tertiary" id="btn-back-pull">Voltar</button>
+          </div>
+        </div>
+
+        <!-- 4. Testar -->
+        <div class="stack" data-step="review" hidden>
+          <div class="stack-sm">
+            <span class="label">Confira</span>
+            <h2 class="h2">Teste antes de salvar</h2>
+            <p class="body-sm" style="font-size: 16px; line-height: 24px">Solta tem que dar 0%. Puxada até o fim, 100%.</p>
+          </div>
+          <div class="card card--pad">
+            <div class="row" style="align-items: baseline; gap: 8px">
+              <span class="big-num" id="review-pct">0</span>
+              <span class="h3 mono" style="color: var(--muted)">%</span>
+            </div>
+            <div class="meter" id="review-meter" role="meter" aria-label="Posição do freio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="meter__fill" id="review-fill"></div>
+            </div>
+            <dl class="facts">
+              <div class="card" style="background: var(--surface-2)"><dt>Repouso</dt><dd id="val-min">—</dd></div>
+              <div class="card" style="background: var(--surface-2)"><dt>Puxado</dt><dd id="val-max">—</dd></div>
+            </dl>
+          </div>
+          <div class="alert" id="alert-review" role="alert" hidden>
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <span class="alert__text"></span>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn--primary" id="btn-save">Salvar no freio</button>
+            <button type="button" class="btn btn--tertiary" id="btn-redo">Refazer</button>
+          </div>
+        </div>
+
+        <!-- Pronto -->
+        <div class="stack" data-step="done" hidden style="align-items: flex-start">
+          <span class="check-badge"><span class="t-success-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span></span>
+          <h2 class="h2 rise d1">Calibração salva</h2>
+          <p class="body-sm" style="font-size: 16px; line-height: 24px; max-width: 520px">O HB-1 já usa os novos valores. Pode fechar esta página e voltar para a pista.</p>
+          <p class="label ok" id="done-vals"></p>
+          <a class="btn btn--secondary" href="/">Voltar ao início</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

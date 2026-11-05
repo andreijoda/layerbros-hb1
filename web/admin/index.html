@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Produção · Handbrake HB-1</title>
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sono:wght,MONO@400..700,0..1&display=swap">
+  <link rel="stylesheet" href="/assets/css/lb.css">
+  <script type="module" src="/assets/js/admin.js"></script>
+</head>
+<body>
+  <header class="hdr hdr--admin">
+    <div class="wrap hdr__row">
+      <div class="row" style="gap: 16px">
+        <img class="hdr__logo" src="/assets/img/layerbros-horizontal-branco.svg" alt="layerbros">
+        <span class="chip chip--accent">Produção</span>
+      </div>
+      <div class="row caption">
+        <span>Operador: <span id="operator">—</span></span>
+        <span class="chip chip--dark" id="fw-chip">Firmware —</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="notice" id="browser-banner" hidden style="margin-bottom: 24px">
+      A produção precisa de USB e de porta serial no navegador. Use o <strong>Chrome</strong> ou o <strong>Edge</strong>, no computador.
+    </div>
+
+    <div class="sidebar-layout" style="flex-direction: row-reverse">
+      <aside class="stack-sm" aria-labelledby="sessao" style="max-width: none; flex: 1 1 320px">
+        <div class="row" style="justify-content: space-between; align-items: baseline">
+          <h2 class="title" id="sessao">Nesta sessão</h2>
+          <span class="label" id="count">0 unidades</span>
+        </div>
+        <div class="table-box">
+          <table>
+            <thead><tr><th scope="col">Série</th><th scope="col">ID da placa</th><th scope="col">Mín</th><th scope="col">Máx</th><th scope="col">Hora</th></tr></thead>
+            <tbody id="log"></tbody>
+          </table>
+        </div>
+        <div class="row">
+          <button type="button" class="btn btn--secondary btn--small" id="btn-csv">Baixar CSV</button>
+          <button type="button" class="btn btn--tertiary btn--small" id="btn-clear">Limpar lista</button>
+        </div>
+        <label class="field" style="margin-top: 12px">Próximo número de série
+          <input class="input" id="next-serial" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+        </label>
+        <p class="caption">A lista e o contador ficam só neste navegador. O registro oficial é o que vai gravado em cada placa.</p>
+      </aside>
+
+      <section class="stack" aria-labelledby="estacao">
+        <div class="row" style="justify-content: space-between; align-items: flex-end">
+          <div class="stack-sm" style="gap: 8px">
+            <h1 class="h2" id="estacao">Nova unidade</h1>
+            <p class="body-sm" style="color: var(--muted)">Grava o firmware, calibra e registra o número de série.</p>
+          </div>
+          <span class="h3 mono" id="serial-preview">—</span>
+        </div>
+
+        <ol class="bars" id="bars" aria-label="Etapas">
+          <li data-key="connect">Conectar</li>
+          <li data-key="flash">Firmware</li>
+          <li data-key="cal">Calibrar</li>
+          <li data-key="register">Registrar</li>
+        </ol>
+
+        <div class="panel" id="station" aria-live="polite" style="min-height: 420px">
+          <div class="alert" id="alert" role="alert" hidden>
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <span class="alert__text"></span>
+          </div>
+
+          <!-- 1. Conectar -->
+          <div class="stack" data-step="connect" style="align-items: flex-start">
+            <h2 class="h3">1. Conecte a placa em modo BOOT</h2>
+            <ol class="body-sm" style="padding-left: 20px; font-size: 16px; line-height: 24px; display: flex; flex-direction: column; gap: 8px">
+              <li>Segure o botão <strong>BOOT</strong> da RP2040-Zero.</li>
+              <li>Ligue o cabo USB e solte o botão.</li>
+              <li>Clique em Procurar placa e escolha “RP2 Boot”.</li>
+            </ol>
+            <div class="row">
+              <button type="button" class="btn btn--primary" id="btn-find-boot">
+                <svg class="breathe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                Procurar placa
+              </button>
+              <button type="button" class="btn btn--tertiary" id="btn-from-hb1">Placa já tem HB-1</button>
+            </div>
+            <button type="button" class="btn btn--tertiary btn--small" id="btn-cal-only">Só calibrar e registrar (sem gravar firmware)</button>
+            <div class="stack-sm" id="boot-wait" hidden>
+              <p class="body-sm"><span class="t-shimmer" data-text="Reiniciando em modo BOOT…">Reiniciando em modo BOOT…</span></p>
+              <button type="button" class="btn btn--primary" id="btn-pick-boot" hidden>Selecionar RP2 Boot</button>
+            </div>
+          </div>
+
+          <!-- 2. Firmware -->
+          <div class="stack" data-step="flash" hidden>
+            <h2 class="h3">2. Gravar firmware</h2>
+            <dl class="facts">
+              <div class="card"><dt>Placa</dt><dd>RP2040 <span class="ok" style="font-weight: 400">· em BOOT</span></dd></div>
+              <div class="card"><dt>ID da placa</dt><dd id="boot-uid">—</dd></div>
+              <div class="card"><dt>Arquivo</dt><dd id="fw-file">—</dd></div>
+            </dl>
+            <div class="card card--pad">
+              <div class="row" style="justify-content: space-between">
+                <span id="flash-label" class="body-sm" style="font-weight: 600; color: var(--ink)">Pronto para gravar</span>
+                <span class="body-sm mono" id="flash-pct">0%</span>
+              </div>
+              <div class="meter" role="progressbar" aria-label="Gravação do firmware" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="flash-meter">
+                <div class="meter__fill" id="flash-fill"></div>
+              </div>
+              <span class="caption">Não desconecte o cabo durante a gravação.</span>
+            </div>
+            <div class="row">
+              <button type="button" class="btn btn--primary" id="btn-flash">Gravar firmware</button>
+              <button type="button" class="btn btn--tertiary" id="btn-pick-hb1" hidden>Conectar HB-1</button>
+            </div>
+          </div>
+
+          <!-- 3. Calibrar -->
+          <div class="stack" data-step="cal" hidden>
+            <h2 class="h3">3. Calibrar</h2>
+            <p class="label ok">HB-1 conectado · <span id="cal-uid"></span></p>
+            <div class="card card--pad">
+              <div class="row" style="justify-content: space-between; align-items: baseline">
+                <span class="caption">Sensor 49E · GPIO26 · ruído <span id="cal-noise">—</span></span>
+                <span class="h2 mono" id="cal-raw">—</span>
+              </div>
+              <div class="meter" aria-hidden="true"><div class="meter__fill meter__fill--ink" id="cal-fill"></div></div>
+            </div>
+            <div class="facts" id="cap-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr))">
+              <button type="button" class="card" id="btn-cap-min" style="border: 0; font: inherit; color: var(--ink); text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 4px">
+                <span class="body-sm" style="font-weight: 600; color: var(--ink)">Gravar repouso</span>
+                <span class="h3 mono" id="cap-min" style="color: var(--muted)">—</span>
+              </button>
+              <button type="button" class="card" id="btn-cap-max" style="border: 0; font: inherit; color: var(--ink); text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 4px">
+                <span class="body-sm" style="font-weight: 600; color: var(--ink)">Gravar puxado</span>
+                <span class="h3 mono" id="cap-max" style="color: var(--muted)">—</span>
+              </button>
+            </div>
+            <div><button type="button" class="btn btn--primary" id="btn-to-register" disabled>Continuar</button></div>
+          </div>
+
+          <!-- 4. Registrar -->
+          <div class="stack" data-step="register" hidden style="align-items: flex-start">
+            <h2 class="h3">4. Registrar na placa</h2>
+            <dl class="facts" style="width: 100%">
+              <div class="card"><dt>Número de série</dt><dd id="reg-serial">—</dd></div>
+              <div class="card"><dt>ID da placa</dt><dd id="reg-uid">—</dd></div>
+              <div class="card"><dt>Repouso</dt><dd id="reg-min">—</dd></div>
+              <div class="card"><dt>Puxado</dt><dd id="reg-max">—</dd></div>
+              <div class="card"><dt>Fabricado em</dt><dd id="reg-mfg">—</dd></div>
+            </dl>
+            <p class="body-sm" id="reg-note">Série, data e calibração vão para a memória da placa. O cliente vê a série na tela Início.</p>
+            <button type="button" class="btn btn--primary" id="btn-register">Gravar e finalizar</button>
+          </div>
+
+          <!-- Pronto -->
+          <div class="stack" data-step="done" hidden style="align-items: flex-start">
+            <span class="check-badge"><span class="t-success-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span></span>
+            <h2 class="h2 rise d1">Unidade pronta</h2>
+            <p class="body-sm" style="font-size: 16px; line-height: 24px">Desconecte, cole a etiqueta <strong class="mono" id="done-serial" style="color: var(--ink)"></strong> e ligue a próxima placa.</p>
+            <button type="button" class="btn btn--primary rise d2" id="btn-next">Próxima unidade</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "product": "HB-1",
+  "latest": {
+    "version": "1.0.0",
+    "file": "hb1-1.0.0.uf2",
+    "sha256": "c9b3c702054da4d331679b3d55a77b106fec98870b038221c5ade63c280b1adf",
+    "size": 74240,
+    "date": "2026-11-05"
+  }
+}

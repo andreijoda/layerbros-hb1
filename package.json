@@ -1,0 +1,11 @@
+{
+  "name": "layerbros-hb1",
+  "private": true,
+  "type": "module",
+  "description": "Firmware e configurador web do freio de mão LayerBros Handbrake HB-1",
+  "scripts": {
+    "dev": "npx --yes serve@14.2.4 web -l 8080",
+    "test": "node --test \"tools/tests/*.test.mjs\"",
+    "check": "for f in web/assets/js/*.js; do node --check \"$f\" || exit 1; done"
+  }
+}
