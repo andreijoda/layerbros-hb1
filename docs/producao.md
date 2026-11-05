@@ -17,7 +17,7 @@ O Windows não libera a interface de gravação da RP2040 para o navegador sem o
 1. Baixe o **Zadig** em https://zadig.akeo.ie.
 2. Coloque uma placa em modo BOOT (segure BOOT e conecte).
 3. No Zadig: *Options → List All Devices*.
-4. Escolha **RP2 Boot (Interface 1)**. Atenção: **Interface 1**, não a 0.
+4. Escolha **RP2 Boot (Interface 1)**. Atenção: **Interface 1**, não a 0. E nunca aplique o Zadig em **Handbrake HB-1** (placa com firmware): isso tira a porta serial e o site deixa de encontrar o freio (ver "Problemas comuns").
 5. Driver de destino **WinUSB**, clique em *Install Driver*.
 
 O pendrive RPI-RP2 continua funcionando. O cliente nunca precisa disso: a recalibração usa só a porta serial.
@@ -77,6 +77,7 @@ O LED confirma: verde piscando ao salvar, depois verde fraco.
 | "RP2 Boot" não aparece na lista | Confira se entrou em BOOT (aparece o pendrive RPI-RP2). Troque o cabo (precisa ser de dados). |
 | "O navegador não conseguiu acessar a placa em modo BOOT" | Windows sem WinUSB na Interface 1 (veja acima) ou outro programa usando a placa (feche o picotool/Thonny). |
 | "A gravação falhou" / "verificação falhou" | Desconecte, entre em BOOT de novo e repita. Persistindo, troque o cabo ou a porta USB (evite hub). |
+| Janela do Chrome abre **vazia** com a placa já gravada (LED piscando) | O Zadig foi aplicado no HB-1. Em `chrome://device-log` aparece `mi_00 … driver="WinUSB"`. Correção: Zadig → Options → List All Devices → **Handbrake HB-1 (Interface 0)** → driver **USB Serial (CDC)** → Replace Driver → reconecte. Deve surgir "Dispositivo Serial USB (COMx)" em Portas. |
 | HB-1 não conecta depois de gravar | Clique em **Conectar HB-1**. Se não aparecer, desconecte e conecte o cabo. |
 | "A placa conectada não é a mesma que foi gravada" | Há outro HB-1 ligado no PC. Deixe só a unidade em produção conectada. |
 | Leitura não muda ao puxar | Fio OUT do 49E fora do GP26, sensor sem 3V3, ou ímã longe demais. |
