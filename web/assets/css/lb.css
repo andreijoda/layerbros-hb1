@@ -89,6 +89,9 @@ a:hover { color: var(--ink); }
 }
 .pill:hover { background: var(--surface-3); color: var(--ink); }
 .pill[aria-current="page"] { background: var(--ink); color: var(--surface); }
+.pill--on-dark { background: #24262B; color: #F3F4F6; }
+.pill--on-dark:hover { background: #2E3036; color: #FFFFFF; }
+.hdr--admin :focus-visible { outline-color: #F3F4F6; }
 .chip {
   display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 14px; border-radius: 9999px;
   background: var(--surface-2); font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: .06em;
