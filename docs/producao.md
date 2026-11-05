@@ -8,6 +8,32 @@ Endereço: **https://hb1.layerbros.com/admin/**. Use o **Chrome** ou o **Edge** 
 
 ![Tela de produção](img/producao-conectar.png)
 
+## Regras de ouro
+
+1. **Zadig uma vez só, só em "RP2 Boot (Interface 1)"**, com o BOOT segurado. Nunca no "Handbrake HB-1".
+2. **Sensor e ímã montados antes de calibrar.** Sem o 49E, o GP26 fica solto e lê ruído (fica em ~20 % e oscila). Calibrar assim grava lixo.
+3. **Uma aba do site por vez.** Duas abas disputam a mesma porta COM.
+
+## Os dois modos da placa (e por que existem "interfaces")
+
+A placa aparece no PC como **dois aparelhos USB diferentes**, conforme o modo. Cada um tem suas interfaces, e os números se repetem entre os modos com significados diferentes, por isso confundem.
+
+**Modo BOOT: "RP2 Boot"** (VID `2E8A`, PID `0003`). Placa nova, ou ligada segurando BOOT. Vem gravado no chip e nunca se apaga.
+
+| Interface | O que é | Driver no Windows |
+|---|---|---|
+| 0 | Pendrive **RPI-RP2** (arrastar `.uf2`) | Nativo |
+| 1 | **PICOBOOT**: porta de gravação usada pelo `/admin` | **WinUSB pelo Zadig**, uma vez por PC |
+
+**Modo HB-1: "Handbrake HB-1"** (VID `2E8A`, PID `10C8`). Firmware rodando, o uso normal.
+
+| Interface | O que é | Driver no Windows |
+|---|---|---|
+| 0 (e 1, de dados) | **"HB-1 Config"**: porta serial (COMx) usada pelo site para ler, calibrar e registrar | Nativo (`usbser`). **Nunca Zadig.** |
+| 2 | **"HB-1 Joystick"**: o que os jogos enxergam | Nativo |
+
+No Chrome do Windows o HB-1 aparece como **"HB-1 Config (Interface 0) (COMx)"**.
+
 ## Preparar o computador (uma vez)
 
 ### Windows: driver da gravação

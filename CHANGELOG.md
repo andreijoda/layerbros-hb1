@@ -9,6 +9,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões d
 
 ### Documentação
 - Produção: Zadig aplicado por engano no HB-1 tira a porta serial (lista do Chrome vazia); diagnóstico por `chrome://device-log` e correção.
+- Produção: regras de ouro e explicação dos dois modos USB da placa (BOOT × HB-1) e suas interfaces.
 
 ## Site 1.1 — 2026-11-05
 
