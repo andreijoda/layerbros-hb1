@@ -114,8 +114,8 @@ async function loadFirmware() {
 async function useBootDevice(device) {
   boot = new Picoboot(device);
   await boot.open();
-  unit.uid = boot.uid;
-  $('#boot-uid').textContent = unit.uid || '—';
+  unit.bootId = boot.uid;
+  $('#boot-uid').textContent = unit.bootId || '—';
   $('#btn-flash').hidden = false;
   $('#btn-pick-hb1').hidden = true;
   $('#flash-label').textContent = 'Pronto para gravar';
@@ -197,23 +197,37 @@ $('#btn-flash').addEventListener('click', (e) => busy(e.currentTarget, async () 
   await connectAfterFlash();
 }));
 
-/** Depois de gravar, encontra a porta do HB-1 com o mesmo ID de placa. */
+/**
+ * O ID que o modo BOOT informa (serial USB do bootrom) tem outro formato que o do firmware
+ * (ID único da flash, 16 hex). Só dá para afirmar "mesma placa" quando um contém o outro;
+ * fora isso o resultado é "não confirmado", nunca "placa diferente".
+ */
+function sameBoard(bootId, fwId) {
+  const a = (bootId || '').toUpperCase();
+  const b = (fwId || '').toUpperCase();
+  if (!a || !b) return false;
+  return a === b || b.includes(a) || a.includes(b);
+}
+
+/** Depois de gravar, encontra a porta do HB-1 (de preferência a que confirma o mesmo ID). */
 async function connectAfterFlash() {
   const deadline = Date.now() + 8000;
   while (Date.now() < deadline) {
     await new Promise((r) => setTimeout(r, 700));
+    const found = [];
     for (const port of await knownPorts()) {
       try {
         const candidate = new HB1();
         await candidate.connect({ ask: false, port });
-        const info = await candidate.info();
-        if (!unit.uid || info.uid === unit.uid) {
-          hb = candidate;
-          await startCalibration(info);
-          return;
-        }
-        await candidate.close();
-      } catch { /* porta ainda não pronta */ }
+        found.push({ hb: candidate, info: await candidate.info() });
+      } catch { /* porta ainda não pronta ou em uso */ }
+    }
+    const pick = found.find((f) => sameBoard(unit.bootId, f.info.uid)) || (found.length === 1 ? found[0] : null);
+    for (const f of found) if (f !== pick) await f.hb.close();
+    if (pick) {
+      hb = pick.hb;
+      await startCalibration(pick.info);
+      return;
     }
   }
   // Placa nova para este navegador: precisa de um clique para autorizar a porta.
@@ -245,8 +259,12 @@ function onSample(e) {
 
 async function startCalibration(info) {
   info = info || (await hb.info());
-  if (unit.uid && info.uid !== unit.uid) {
-    throw new Error('A placa conectada não é a mesma que foi gravada.');
+  const uidNote = $('#uid-note');
+  if (unit.bootId && !sameBoard(unit.bootId, info.uid)) {
+    uidNote.textContent = 'Confira que só a placa que acabou de ser gravada está conectada: o site não consegue comparar os IDs dos dois modos.';
+    uidNote.hidden = false;
+  } else {
+    uidNote.hidden = true;
   }
   unit.uid = info.uid;
   unit.fw = info.fw;

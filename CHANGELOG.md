@@ -10,6 +10,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões d
 - Produção: mensagens de erro mostram o detalhe técnico (nome e texto do erro do navegador).
 
 ### Corrigido
+- Produção, caminho B: depois de gravar, a calibração não falha mais com "A placa conectada não é a mesma que foi gravada". O ID do modo BOOT (bootrom) tem outro formato que o do firmware; agora o site só confirma quando dá e, senão, avisa em vez de bloquear.
 - Gravação pelo site: o reset inicial da interface PICOBOOT não interrompe mais a conexão quando o Windows recusa a requisição; uma tentativa anterior que deixou a placa aberta não bloqueia a próxima.
 
 ### Alterado

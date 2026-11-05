@@ -77,7 +77,7 @@ O passo 1 da tela tem dois caminhos:
 |---|---|---|
 | Driver | Nenhum, em nenhum sistema | WinUSB pelo Zadig, uma vez por PC Windows |
 | Conferência | O bootloader confere cada bloco | Leitura byte a byte depois de gravar |
-| Mesma placa? | Uma placa por vez na bancada | O site compara o ID entre BOOT e HB-1 |
+| Mesma placa? | Uma placa por vez na bancada | Uma placa por vez na bancada (o site avisa se não conseguir confirmar) |
 
 ### Caminho A (padrão)
 

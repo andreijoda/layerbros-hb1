@@ -100,7 +100,7 @@ Em modo BOOT a RP2040 expõe uma interface USB vendor (classe `0xFF`) com o prot
 
 Antes de gravar, a produção baixa o `.uf2` indicado no `manifest.json` e confere o sha256.
 
-O ID único da placa aparece como número de série USB tanto no modo BOOT quanto no firmware. A produção compara os dois para garantir que calibra a mesma placa que acabou de gravar.
+O modo BOOT e o firmware informam um ID como número de série USB, mas em **formatos diferentes**: o bootrom da RP2040 mostra 12 caracteres (ex.: `E0C9125B0D9B`); o firmware usa o ID único da flash, com 16. Depois de gravar, a produção conecta no HB-1 que aparecer (preferindo um cujo ID contenha o do modo BOOT). Se não der para confirmar, ela avisa para manter só uma placa conectada, sem bloquear.
 
 ## Desenvolvimento e testes
 

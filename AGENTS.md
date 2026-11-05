@@ -90,7 +90,7 @@ wrangler.jsonc        alternativa de deploy como Worker (o Pages ignora)
 
 - Nada bloqueante no loop principal além de `sensor_average()` (≤ 200 ms, chama `tud_task()`).
 - Gravação em flash só via `flash_safe_execute()` (`storage.c`).
-- O ID único da placa é lido no boot (`usb_serial_string()`) e vira o número de série USB. O site compara esse ID entre o modo BOOT e o firmware para garantir que é a mesma placa.
+- O ID único da placa é lido no boot (`usb_serial_string()`) e vira o número de série USB. O ID que o modo BOOT informa (serial do bootrom) tem **outro formato** (ex.: 12 hex) que o do firmware (16 hex): o site só confirma "mesma placa" quando um contém o outro e, fora isso, mostra um aviso em vez de bloquear (`sameBoard()` em `admin.js`).
 - Mudanças não salvas são descartadas quando o site fecha a porta (DTR cai → `storage_load`).
 
 ## O que não fazer
