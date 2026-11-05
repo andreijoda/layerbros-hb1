@@ -48,7 +48,7 @@ Nada a fazer.
    - Placa que já tem HB-1: conecte normalmente e clique em **Placa já tem HB-1**. Ela reinicia em BOOT sozinha. Na primeira vez com cada placa, o navegador pede um clique em **Selecionar RP2 Boot**.
    - Só recalibrar ou registrar (sem regravar): **Só calibrar e registrar**.
 2. **Gravar firmware.** Clique em **Gravar firmware**. Grava, verifica byte a byte e reinicia (alguns segundos). Não desconecte o cabo.
-3. **Conectar o HB-1.** Em geral conecta sozinho. Se for a primeira vez com essa placa neste navegador, clique em **Conectar HB-1** e escolha "Handbrake HB-1". A página confere que o ID da placa é o mesmo do passo 1.
+3. **Conectar o HB-1.** Em geral conecta sozinho. Se for a primeira vez com essa placa neste navegador, clique em **Conectar HB-1** e escolha "Handbrake HB-1" (no Windows aparece como **"HB-1 Config (Interface 0) (COMx)"**). A página confere que o ID da placa é o mesmo do passo 1.
 4. **Calibrar.**
    - Alavanca solta → **Gravar repouso**.
    - Alavanca no batente → **Gravar puxado**.

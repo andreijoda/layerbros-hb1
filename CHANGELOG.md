@@ -4,7 +4,11 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões d
 
 ## [Não lançado]
 
-Nada ainda.
+### Alterado
+- Telas avisam que, no Windows, o freio aparece na janela do Chrome como "HB-1 Config (COM…)" e não como "Handbrake HB-1".
+
+### Documentação
+- Produção: Zadig aplicado por engano no HB-1 tira a porta serial (lista do Chrome vazia); diagnóstico por `chrome://device-log` e correção.
 
 ## Site 1.1 — 2026-11-05
 

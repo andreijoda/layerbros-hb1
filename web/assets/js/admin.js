@@ -200,7 +200,7 @@ async function connectAfterFlash() {
     }
   }
   // Placa nova para este navegador: precisa de um clique para autorizar a porta.
-  $('#flash-label').textContent = 'Gravado. Clique em Conectar HB-1 e escolha “Handbrake HB-1”.';
+  $('#flash-label').textContent = 'Gravado. Clique em Conectar HB-1 e escolha “Handbrake HB-1” (no Windows: “HB-1 Config (COM…)”).';
   $('#btn-pick-hb1').hidden = false;
 }
 
