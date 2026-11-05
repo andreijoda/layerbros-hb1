@@ -71,14 +71,6 @@ a:hover { color: var(--ink); }
 .label { font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-variation-settings: "MONO" 1; color: var(--muted); }
 .big-num { font-size: 80px; line-height: 72px; font-weight: 600; letter-spacing: -.05em; font-variation-settings: "MONO" 1; }
 
-/* ---------- faixa de avisos */
-.ticker { background: #121316; color: #fff; overflow: hidden; font-size: 13px; line-height: 16px; }
-.ticker__track { display: flex; width: max-content; padding-block: 8px; animation: lb-marquee 38s linear infinite; }
-.ticker:hover .ticker__track { animation-play-state: paused; }
-.ticker span { display: flex; align-items: center; gap: 16px; padding: 0 24px; white-space: nowrap; }
-.ticker span::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--laranja); }
-@keyframes lb-marquee { to { transform: translateX(-50%); } }
-
 /* ---------- cabeçalho */
 .hdr { border-bottom: 1px solid var(--line); background: var(--surface); }
 .hdr__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; }
@@ -192,10 +184,15 @@ td { padding: 12px 16px; border-top: 1px solid var(--line); white-space: nowrap;
 tr.is-new { animation: lb-rowin 2.4s ease-out both; }
 @keyframes lb-rowin { from { background-color: var(--laranja-suave); } to { background-color: transparent; } }
 
-/* ---------- ilustração do freio */
-.lever-art { display: flex; justify-content: center; padding: 8px 0 16px; }
-.lever { transform-origin: 60px 112px; animation: lb-pull 3.6s cubic-bezier(.5, 0, .3, 1) infinite; }
-@keyframes lb-pull { 0%, 18% { transform: rotate(0); } 42%, 58% { transform: rotate(-34deg); } 82%, 100% { transform: rotate(0); } }
+/* ---------- ilustração: cabo USB-C conectando no HB-1 */
+.usb-art { display: flex; justify-content: center; padding: 8px 0 16px; overflow: hidden; }
+.usb-art svg { max-width: 100%; height: auto; }
+.usb-plug { animation: lb-plug 3.2s cubic-bezier(.5, 0, .3, 1) infinite; }
+@keyframes lb-plug { 0%, 12% { transform: translateX(0); } 40%, 78% { transform: translateX(36px); } 92%, 100% { transform: translateX(0); } }
+.usb-led { opacity: .15; animation: lb-led 3.2s ease infinite; }
+@keyframes lb-led { 0%, 40% { opacity: .15; } 46%, 78% { opacity: 1; } 86%, 100% { opacity: .15; } }
+.usb-ring { opacity: 0; transform-box: fill-box; transform-origin: center; animation: lb-usb-ring 3.2s ease-out infinite; }
+@keyframes lb-usb-ring { 0%, 42% { opacity: 0; transform: scale(.6); } 48% { opacity: .7; transform: scale(1); } 72%, 100% { opacity: 0; transform: scale(2.4); } }
 .nudge { animation: lb-nudge 1.8s ease-in-out infinite; }
 @keyframes lb-nudge { 0%, 100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(6px); opacity: 1; } }
 .breathe { animation: lb-breathe 2.4s ease-in-out infinite; }
@@ -259,5 +256,7 @@ tr.is-new { animation: lb-rowin 2.4s ease-out both; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .t-success-check { opacity: 1; }
+  .usb-plug { transform: translateX(36px); }
+  .usb-led { opacity: 1; }
   .t-success-check svg path { stroke-dashoffset: 0 !important; }
 }

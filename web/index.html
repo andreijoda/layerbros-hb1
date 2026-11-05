@@ -13,15 +13,6 @@
   <script type="module" src="/assets/js/home.js"></script>
 </head>
 <body>
-  <div class="ticker" role="region" aria-label="Avisos">
-    <div class="ticker__track">
-      <span>Calibração salva no próprio freio</span><span>Funciona em qualquer jogo que aceite joystick</span>
-      <span>Recalibre em um minuto pelo navegador</span><span>Chrome ou Edge, no computador</span>
-      <span aria-hidden="true">Calibração salva no próprio freio</span><span aria-hidden="true">Funciona em qualquer jogo que aceite joystick</span>
-      <span aria-hidden="true">Recalibre em um minuto pelo navegador</span><span aria-hidden="true">Chrome ou Edge, no computador</span>
-    </div>
-  </div>
-
   <header class="hdr">
     <div class="wrap hdr__row">
       <a href="/" aria-label="layerbros, início">
@@ -65,15 +56,20 @@
 
       <div class="panel rise d3">
         <div id="panel-empty" class="stack-sm" style="align-items: flex-start">
-          <div class="lever-art" style="align-self: stretch">
-            <svg width="160" height="140" viewBox="0 0 160 140" fill="none" aria-hidden="true">
-              <rect x="20" y="112" width="120" height="16" rx="8" fill="var(--surface-3)"/>
-              <g class="lever">
-                <rect x="52" y="20" width="16" height="96" rx="8" fill="var(--ink)"/>
-                <rect x="46" y="10" width="28" height="28" rx="14" fill="var(--laranja)"/>
+          <div class="usb-art" style="align-self: stretch">
+            <!-- Cabo USB-C entrando no HB-1; o LED acende quando conecta. -->
+            <svg width="240" height="120" viewBox="0 0 240 120" fill="none" aria-hidden="true">
+              <g class="usb-plug">
+                <path d="M-80 60H74" stroke="var(--ink)" stroke-width="8" stroke-linecap="round"/>
+                <rect x="70" y="45" width="44" height="30" rx="11" fill="var(--ink)"/>
+                <rect x="110" y="51" width="26" height="18" rx="9" fill="var(--surface-3)" stroke="var(--ink)" stroke-width="3"/>
+                <rect x="118" y="58" width="12" height="4" rx="2" fill="var(--ink)"/>
               </g>
-              <circle cx="60" cy="112" r="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="3"/>
-              <path class="nudge" d="M112 44v32m-10-10 10 10 10-10" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="150" y="28" width="76" height="64" rx="16" fill="var(--ink)"/>
+              <rect x="150" y="50" width="6" height="20" rx="3" fill="var(--muted)"/>
+              <circle class="usb-ring" cx="206" cy="46" r="7" stroke="var(--laranja)" stroke-width="2"/>
+              <circle class="usb-led" cx="206" cy="46" r="5" fill="var(--laranja)"/>
+              <rect x="172" y="72" width="38" height="6" rx="3" fill="var(--ink-2)"/>
             </svg>
           </div>
           <h2 class="title">Nenhum freio conectado</h2>
