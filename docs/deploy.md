@@ -1,5 +1,23 @@
 # Deploy no Cloudflare
 
+## Configuração atual (produção)
+
+| Item | Valor |
+|---|---|
+| Projeto Pages | `layerbros-hb1` (branch `main`, saída `web`, sem build) |
+| Endereços | https://hb1.layerbros.com e https://layerbros-hb1.pages.dev |
+| Equipe Zero Trust | `joda` (`joda.cloudflareaccess.com`), plano Free |
+| Login | One-time PIN (código por e-mail) |
+| App Access **HB-1 Produção** | `/admin` e `/admin/*` nos dois endereços |
+| App Access **HB-1 Prévias do Pages** | `*.layerbros-hb1.pages.dev` inteiro (URLs de cada deploy) |
+| Política reutilizável **HB-1 Operadores** | Allow por e-mail, sessão de 24 h |
+
+**Novo operador:** Zero Trust → Access controls → Policies → **HB-1 Operadores** → adicione o e-mail em *Include → Emails*. Vale para as duas aplicações.
+
+Continuam públicos, de propósito: `/`, `/recalibrar/`, `/assets/*` e `/firmware/*`. Nenhum desses arquivos contém segredo; a proteção do `/admin` está no Access, não no código.
+
+O passo a passo abaixo explica como recriar essa configuração do zero.
+
 O site é estático: a pasta `web/` vai inteira para o **Cloudflare Pages**. O `/admin` fica protegido pelo **Cloudflare Access** (login por e-mail com código ou por provedor), sem senha no código.
 
 ## 1. Cloudflare Pages
