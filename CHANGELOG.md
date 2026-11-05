@@ -7,6 +7,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões d
 ### Adicionado
 - Produção: guia do operador dentro do site (`/admin/guia/`), com os modos da placa, passo a passo, instalação do driver no Windows e problemas comuns.
 - Produção: aviso de firmware desatualizado na calibração.
+- Produção: mensagens de erro mostram o detalhe técnico (nome e texto do erro do navegador).
+
+### Corrigido
+- Gravação pelo site: o reset inicial da interface PICOBOOT não interrompe mais a conexão quando o Windows recusa a requisição; uma tentativa anterior que deixou a placa aberta não bloqueia a próxima.
 
 ### Alterado
 - Produção, passo 1 com dois caminhos: **A. Arrastar o arquivo** (padrão, sem driver; botões "Baixar firmware" e "Conectar HB-1") e **B. Gravar pelo site** (WebUSB; Zadig uma vez no Windows). "Só calibrar e registrar" virou "Conectar HB-1"; "Placa já tem HB-1" virou "Regravar uma placa HB-1".

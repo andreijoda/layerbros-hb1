@@ -86,12 +86,17 @@ export class Picoboot {
 
   async open() {
     const d = this.device;
+    // Uma tentativa anterior pode ter deixado o dispositivo aberto com a interface presa.
+    if (d.opened) {
+      try { await d.close(); } catch { /* ignora */ }
+    }
     try {
       await d.open();
       if (d.configuration === null) await d.selectConfiguration(1);
     } catch (err) {
-      throw new PicobootError('open_failed', err.message);
+      throw new PicobootError('open_failed', `${err.name}: ${err.message}`);
     }
+    if (!d.configuration) throw new PicobootError('open_failed', 'sem configuração USB ativa');
     for (const itf of d.configuration.interfaces) {
       const alt = itf.alternates[0];
       if (alt.interfaceClass === 0xff && alt.endpoints.length === 2) {
@@ -107,9 +112,15 @@ export class Picoboot {
       await d.claimInterface(this.itf);
     } catch (err) {
       // No Windows isto falha sem o driver WinUSB na interface PICOBOOT (ver docs/producao.md).
-      throw new PicobootError('claim_failed', err.message);
+      throw new PicobootError('claim_failed', `${err.name}: ${err.message}`);
     }
-    await this._reset();
+    // O reset só limpa um comando pela metade. Numa placa recém-ligada não há nada a limpar,
+    // e no Windows a requisição de controle pode ser recusada: não impede a gravação.
+    try {
+      await this._reset();
+    } catch (err) {
+      console.warn('PICOBOOT reset ignorado:', err);
+    }
   }
 
   async close() {

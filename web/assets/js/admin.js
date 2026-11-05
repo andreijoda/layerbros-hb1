@@ -41,8 +41,14 @@ function go(step) {
   markSteps(bars, step === 'done' ? '__all__' : step);
 }
 
+// Na produção mostramos também o detalhe técnico: ajuda a diagnosticar sem abrir o console.
 function fail(err) {
-  showAlert(alertEl, typeof err === 'string' ? err : errorMessage(err));
+  if (typeof err === 'string') return showAlert(alertEl, err);
+  let msg = errorMessage(err);
+  const detail = err && err.message && err.message !== err.code ? err.message : '';
+  const name = err && err.name && !['Error', 'PicobootError', 'HB1Error'].includes(err.name) ? err.name : '';
+  if (detail || name) msg += ` Detalhe técnico: ${[name, detail].filter(Boolean).join(': ')}`;
+  showAlert(alertEl, msg);
 }
 
 async function busy(btn, fn) {
